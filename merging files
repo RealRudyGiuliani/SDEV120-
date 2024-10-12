@@ -1,0 +1,68 @@
+start
+    Declarations
+        InputFile geraldsBusinesses
+        InputFile geraldinesBusinesses
+        OutputFile mergedFile
+        string geraldsFile
+        string geraldsNames
+        string geraldsLocations
+        num geraldsCustNumber
+        num geraldsSqFootage
+        string geraldinesFile
+        string geraldinesNames
+        string geraldinesLocations
+        num geraldinesCustNumer
+        num geraldinesSqFootage
+        num END_NUM = "9999999999"
+        string areBothAtEnd = "N"
+    
+
+    getReady()
+        open geraldsBusinesses "GeraldsBusinesses.csv" // GeraldsBusinesses.csv is opened in memory
+        open geraldinesBusinesses "GeraldinesBusinesses.csv" // GeraldinesBusinesses.csv is opened in memory
+        open mergedFile "MergedCustomerData.csv"
+        readGeralds()
+        readGeraldines()
+        checkEnd()
+    return
+    
+
+    readGeralds()
+        input geraldsCustNumber, geraldsNames, geraldsLocations, geraldsSqFootage from geraldsBusinesses
+        if eof then
+            geraldsCustNumber = END_NUM
+        endif
+    return
+
+    readGeraldines()
+         input geraldinesCustNumber, geraldinesNames, geraldinesLocations, geraldinesSqFootage from geraldinesBusinesses
+         if eof then
+            geraldinesCustNumber = END_NUM
+        endif
+    return
+
+    checkEnd()
+        if geraldsCustNumber = END_NUM then
+            if geraldinesCustNumber = END_NUM then
+                areBothAtEnd = "Y"
+            endif
+        endif
+    return
+
+    mergeRecords()
+        if geraldsCustNumber < GeraldinesCustNumber then
+            output geraldsCustNumber, geraldsNames, geraldsLocations, geraldsSqFootage to mergedFile
+            readGeralds()
+        else
+           output geraldinesCustNumber, geraldinesNames, geraldinesLocations, geraldinesSqFootage to mergedFile
+        endif
+        checkEnd() 
+    return
+
+    finiship()
+        close geraldsBusinesses
+        close geraldinesBusinesses
+        close mergedFile
+    return
+
+    
